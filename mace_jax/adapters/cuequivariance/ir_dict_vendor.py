@@ -14,12 +14,10 @@
 # limitations under the License.
 """Utilities for working with dict[Irrep, Array] representation.
 
-Vendored from cuequivariance_jax.ir_dict, with the segmented_polynomial import
-routed through cuequivariance_jax to support older versions that lack the
-ir_dict module.
+Vendored from ``cuequivariance_jax.ir_dict`` with local adjustments for the
+``mace_jax`` adapter layer.
 """
 
-from string import ascii_lowercase, ascii_uppercase, digits
 from typing import Any
 
 import cuequivariance_jax as cuex
@@ -41,52 +39,6 @@ __all__ = [
     'irreps_add',
     'irreps_zeros_like',
 ]
-
-
-def _ensure_letter_capacity(min_len: int = 1024) -> None:
-    """Extend cuequivariance operand letters to avoid repr crashes on errors."""
-    try:
-        from cuequivariance.segmented_polynomials import operation as sp_operation
-    except Exception:
-        return
-
-    alphabet = ascii_lowercase + ascii_uppercase + digits
-    if len(sp_operation.IVARS) < min_len:
-        repeats = (min_len - len(sp_operation.IVARS) + len(alphabet) - 1) // len(
-            alphabet
-        )
-        sp_operation.IVARS = sp_operation.IVARS + (alphabet * repeats)
-    if len(sp_operation.OVARS) < min_len:
-        repeats = (min_len - len(sp_operation.OVARS) + len(alphabet) - 1) // len(
-            alphabet
-        )
-        sp_operation.OVARS = sp_operation.OVARS + (alphabet * repeats)
-
-
-_ensure_letter_capacity()
-
-
-def _ensure_letter_capacity(min_len: int = 1024) -> None:
-    """Extend cuequivariance operand letters to avoid repr crashes on errors."""
-    try:
-        from cuequivariance.segmented_polynomials import operation as sp_operation
-    except Exception:
-        return
-
-    alphabet = ascii_lowercase + ascii_uppercase + digits
-    if len(sp_operation.IVARS) < min_len:
-        repeats = (min_len - len(sp_operation.IVARS) + len(alphabet) - 1) // len(
-            alphabet
-        )
-        sp_operation.IVARS = sp_operation.IVARS + (alphabet * repeats)
-    if len(sp_operation.OVARS) < min_len:
-        repeats = (min_len - len(sp_operation.OVARS) + len(alphabet) - 1) // len(
-            alphabet
-        )
-        sp_operation.OVARS = sp_operation.OVARS + (alphabet * repeats)
-
-
-_ensure_letter_capacity()
 
 
 def segmented_polynomial_uniform_1d(
